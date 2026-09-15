@@ -1,0 +1,21 @@
+@model ITServiceAssetManagement.Models.Entities.Asset
+@{
+    ViewData["Title"] = "Hapus Asset";
+}
+
+<h2 class="text-2xl font-semibold mb-4">Hapus Asset</h2>
+
+<p class="text-muted2 mb-3">Apakah Anda yakin ingin menghapus asset berikut?</p>
+
+<dl class="grid grid-cols-1 sm:grid-cols-4 gap-y-2 mb-4 max-w-md">
+    <dt class="sm:col-span-1 font-medium text-muted2">Nama</dt>
+    <dd class="sm:col-span-3">@Model.AssetName</dd>
+    <dt class="sm:col-span-1 font-medium text-muted2">Kode</dt>
+    <dd class="sm:col-span-3">@Model.AssetCode</dd>
+</dl>
+
+<form asp-action="Delete" method="post">
+    <input type="hidden" asp-for="Id" />
+    <button type="submit" class="btn-danger">Hapus</button>
+    <a asp-action="Index" class="btn-secondary">Batal</a>
+</form>

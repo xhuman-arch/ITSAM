@@ -1,0 +1,77 @@
+@model ITServiceAssetManagement.Models.PaginatedList<ITServiceAssetManagement.Models.Entities.Asset>
+@{
+    ViewData["Title"] = "Daftar Asset";
+}
+
+<h2 class="text-2xl font-semibold mb-4">Daftar Asset</h2>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert-success">@TempData["Success"]</div>
+}
+
+<div class="flex flex-wrap gap-2 mb-3">
+    <a asp-action="Create" class="btn-primary">+ Tambah Asset</a>
+    <a asp-controller="Export" asp-action="Assets" class="btn-success">Export Excel</a>
+</div>
+
+<form method="get" class="flex flex-wrap items-center gap-2 mb-4">
+    <input type="text" name="search" value="@ViewBag.Search" class="form-control w-56" placeholder="Cari nama/kode..." />
+    <select name="status" class="form-control w-48">
+        <option value="">-- Semua Status --</option>
+        <option value="ACTIVE" selected="@(ViewBag.Status == "ACTIVE")">ACTIVE</option>
+        <option value="IN_REPAIR" selected="@(ViewBag.Status == "IN_REPAIR")">IN_REPAIR</option>
+        <option value="RETIRED" selected="@(ViewBag.Status == "RETIRED")">RETIRED</option>
+    </select>
+    <button type="submit" class="btn-outline-secondary">Filter</button>
+</form>
+
+<div class="overflow-x-auto">
+    <table class="table-base">
+        <thead>
+            <tr>
+                <th>Nama</th>
+                <th>Kode</th>
+                <th>Kategori</th>
+                <th>Lokasi</th>
+                <th>Status</th>
+                <th>Aksi</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var asset in Model)
+            {
+                <tr>
+                    <td>@asset.AssetName</td>
+                    <td>@asset.AssetCode</td>
+                    <td>@asset.Category</td>
+                    <td>@asset.Location</td>
+                    <td><span class="badge-secondary">@asset.Status</span></td>
+                    <td class="whitespace-nowrap">
+                        <a asp-action="Details" asp-route-id="@asset.Id" class="btn-info btn-sm">Detail</a>
+                        <a asp-action="Edit" asp-route-id="@asset.Id" class="btn-warning btn-sm">Edit</a>
+                        <a asp-action="Delete" asp-route-id="@asset.Id" class="btn-danger btn-sm">Hapus</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<nav class="mt-4">
+    <ul class="inline-flex -space-x-px">
+        @if (Model.HasPreviousPage)
+        {
+            <li class="page-item">
+                <a class="page-link rounded-l-md" asp-action="Index" asp-route-pageIndex="@(Model.PageIndex - 1)" asp-route-status="@ViewBag.Status" asp-route-search="@ViewBag.Search">Sebelumnya</a>
+            </li>
+        }
+        <li class="page-item disabled"><span class="page-link">Halaman @Model.PageIndex dari @Model.TotalPages</span></li>
+        @if (Model.HasNextPage)
+        {
+            <li class="page-item">
+                <a class="page-link rounded-r-md" asp-action="Index" asp-route-pageIndex="@(Model.PageIndex + 1)" asp-route-status="@ViewBag.Status" asp-route-search="@ViewBag.Search">Berikutnya</a>
+            </li>
+        }
+    </ul>
+</nav>

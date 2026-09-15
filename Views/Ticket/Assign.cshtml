@@ -1,0 +1,27 @@
+@model ITServiceAssetManagement.Models.TicketAssignViewModel
+@{
+    ViewData["Title"] = "Assign Tiket";
+    var ticket = (ITServiceAssetManagement.Models.Entities.Ticket)ViewBag.Ticket;
+}
+
+<h2 class="text-2xl font-semibold mb-4">Assign Tiket: @ticket.Title</h2>
+
+<form asp-action="Assign" method="post" class="max-w-md">
+    <input type="hidden" asp-for="TicketId" />
+    <div asp-validation-summary="All" class="field-error mb-2"></div>
+
+    <div class="mb-4">
+        <label asp-for="AssignedToId" class="form-label">Tugaskan ke</label>
+        <select asp-for="AssignedToId" class="form-control">
+            <option value="">-- Pilih IT Support --</option>
+            @foreach (var user in (IList<ITServiceAssetManagement.Models.ApplicationUser>)ViewBag.ItSupportUsers)
+            {
+                <option value="@user.Id">@user.FullName (@user.Email)</option>
+            }
+        </select>
+        <span asp-validation-for="AssignedToId" class="field-error"></span>
+    </div>
+
+    <button type="submit" class="btn-primary">Assign</button>
+    <a asp-action="Details" asp-route-id="@Model.TicketId" class="btn-secondary">Batal</a>
+</form>

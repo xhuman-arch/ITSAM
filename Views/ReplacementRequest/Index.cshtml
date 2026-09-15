@@ -1,0 +1,81 @@
+@model ITServiceAssetManagement.Models.PaginatedList<ITServiceAssetManagement.Models.Entities.ReplacementRequest>
+@{
+    ViewData["Title"] = "Pengajuan Penggantian Asset";
+}
+
+<h2 class="text-2xl font-semibold mb-4">Pengajuan Penggantian Asset</h2>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert-success">@TempData["Success"]</div>
+}
+
+<div class="flex flex-wrap gap-2 mb-3">
+    @if (User.IsInRole("IT_SERVICE") || User.IsInRole("IT_SUPPORT"))
+    {
+        <a asp-action="Create" class="btn-primary">+ Ajukan Penggantian</a>
+    }
+    <a asp-controller="Export" asp-action="ReplacementRequests" class="btn-success">Export Excel</a>
+</div>
+
+<form method="get" class="flex flex-wrap items-center gap-2 mb-4">
+    <select name="status" class="form-control w-48">
+        <option value="">-- Semua Status --</option>
+        <option value="PENDING" selected="@(ViewBag.Status == "PENDING")">PENDING</option>
+        <option value="APPROVED" selected="@(ViewBag.Status == "APPROVED")">APPROVED</option>
+        <option value="REJECTED" selected="@(ViewBag.Status == "REJECTED")">REJECTED</option>
+        <option value="COMPLETED" selected="@(ViewBag.Status == "COMPLETED")">COMPLETED</option>
+    </select>
+    <button type="submit" class="btn-outline-secondary">Filter</button>
+</form>
+
+<div class="overflow-x-auto">
+    <table class="table-base">
+        <thead>
+            <tr>
+                <th>Asset</th>
+                <th>Alasan</th>
+                <th>Diajukan oleh</th>
+                <th>Status</th>
+                <th>Diproses oleh</th>
+                <th>Aksi</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var r in Model)
+            {
+                <tr>
+                    <td>@r.Asset?.AssetName</td>
+                    <td>@r.Reason</td>
+                    <td>@r.RequestedBy?.FullName</td>
+                    <td><span class="badge-warning">@r.Status</span></td>
+                    <td>@r.ProcessedBy?.FullName</td>
+                    <td>
+                        @if (User.IsInRole("PURCHASING") && r.Status == "PENDING")
+                        {
+                            <a asp-action="Process" asp-route-id="@r.Id" class="btn-primary btn-sm">Proses</a>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<nav class="mt-4">
+    <ul class="inline-flex -space-x-px">
+        @if (Model.HasPreviousPage)
+        {
+            <li class="page-item">
+                <a class="page-link rounded-l-md" asp-action="Index" asp-route-pageIndex="@(Model.PageIndex - 1)" asp-route-status="@ViewBag.Status">Sebelumnya</a>
+            </li>
+        }
+        <li class="page-item disabled"><span class="page-link">Halaman @Model.PageIndex dari @Model.TotalPages</span></li>
+        @if (Model.HasNextPage)
+        {
+            <li class="page-item">
+                <a class="page-link rounded-r-md" asp-action="Index" asp-route-pageIndex="@(Model.PageIndex + 1)" asp-route-status="@ViewBag.Status">Berikutnya</a>
+            </li>
+        }
+    </ul>
+</nav>

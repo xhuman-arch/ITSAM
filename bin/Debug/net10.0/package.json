@@ -1,0 +1,11 @@
+{
+  "name": "itserviceassetmanagement",
+  "private": true,
+  "scripts": {
+    "build:css": "tailwindcss -i ./wwwroot/css/input.css -o ./wwwroot/css/site.css --minify",
+    "watch:css": "tailwindcss -i ./wwwroot/css/input.css -o ./wwwroot/css/site.css --watch"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.4.14"
+  }
+}

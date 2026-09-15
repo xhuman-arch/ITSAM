@@ -1,0 +1,48 @@
+@model ITServiceAssetManagement.Models.AssetFormViewModel
+@{
+    ViewData["Title"] = "Tambah Asset";
+}
+
+<h2 class="text-2xl font-semibold mb-4">Tambah Asset</h2>
+
+<form asp-action="Create" method="post" class="max-w-md">
+    <div asp-validation-summary="All" class="field-error mb-2"></div>
+
+    <div class="mb-3">
+        <label asp-for="AssetName" class="form-label"></label>
+        <input asp-for="AssetName" class="form-control" />
+        <span asp-validation-for="AssetName" class="field-error"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="AssetCode" class="form-label"></label>
+        <input asp-for="AssetCode" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Category" class="form-label"></label>
+        <input asp-for="Category" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Location" class="form-label"></label>
+        <input asp-for="Location" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Status" class="form-label"></label>
+        <select asp-for="Status" class="form-control">
+            <option value="ACTIVE">ACTIVE</option>
+            <option value="IN_REPAIR">IN_REPAIR</option>
+            <option value="RETIRED">RETIRED</option>
+        </select>
+    </div>
+
+    <div class="mb-4">
+        <label asp-for="PurchaseDate" class="form-label"></label>
+        <input asp-for="PurchaseDate" class="form-control" />
+    </div>
+
+    <button type="submit" class="btn-primary">Simpan</button>
+    <a asp-action="Index" class="btn-secondary">Batal</a>
+</form>

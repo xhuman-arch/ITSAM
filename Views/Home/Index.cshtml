@@ -1,0 +1,47 @@
+@{
+    ViewData["Title"] = "Home Page";
+    bool isLoggedIn = User.Identity != null && User.Identity.IsAuthenticated;
+}
+
+<section class="relative overflow-hidden rounded-2xl -mt-2">
+    <!-- Background gradient -->
+    <div class="absolute inset-0 bg-gradient-to-br from-gray-900 via-primary/40 to-gray-900"></div>
+    <div class="absolute inset-0 bg-black/40"></div>
+
+    <div class="relative">
+        <!-- Status bar -->
+        <div class="flex items-center justify-center gap-2 text-xs md:text-sm text-white/90 bg-black/30 py-2.5 px-4 text-center">
+            <span class="w-1.5 h-1.5 rounded-full bg-success inline-block"></span>
+            
+        <!-- Hero content -->
+        <div class="px-6 py-14 md:py-20 text-center">
+            <span class="inline-flex items-center gap-2 rounded-full border border-white/30 text-white/90 text-xs md:text-sm tracking-wide px-4 py-1.5 mb-6">
+                🔒 SECURE &middot; REAL-TIME &middot; TERPUSAT
+            </span>
+
+            <h1 class="text-3xl md:text-5xl font-bold text-white leading-tight mb-2">
+                Kelola Aset &amp; Layanan IT
+            </h1>
+            <p class="text-3xl md:text-5xl font-serif italic text-primary/90 mb-6" style="color:#8EA9FF;">
+                dalam Satu Platform
+            </p>
+
+            <p class="text-white/80 max-w-lg mx-auto mb-9 text-sm md:text-base">
+                Catat aset, tangani tiket helpdesk, dan proses permintaan penggantian
+                perangkat &mdash; semua dalam satu sistem yang cepat dan transparan.
+            </p>
+
+            <div class="flex items-center justify-center gap-3 flex-wrap">
+                @if (isLoggedIn)
+                {
+                    <a class="btn-primary" asp-controller="Dashboard" asp-action="Index"> &rarr;</a>
+                }
+                else
+                {
+                    <a class="btn-primary" asp-controller="Account" asp-action="Register">Mulai Sekarang &rarr;</a>
+                    <a class="btn bg-white/10 text-white border border-white/40 hover:bg-white/20" asp-controller="Account" asp-action="Login">Login</a>
+                }
+            </div>
+        </div>
+    </div>
+</section>

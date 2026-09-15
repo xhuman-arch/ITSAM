@@ -1,0 +1,23 @@
+@model ITServiceAssetManagement.Models.ReplacementProcessViewModel
+@{
+    ViewData["Title"] = "Proses Pengajuan";
+}
+
+<h2 class="text-2xl font-semibold mb-4">Proses Pengajuan Penggantian</h2>
+
+<form asp-action="Process" method="post" class="max-w-md">
+    <input type="hidden" asp-for="Id" />
+    <div asp-validation-summary="All" class="field-error mb-2"></div>
+
+    <div class="mb-4">
+        <label asp-for="Status" class="form-label"></label>
+        <select asp-for="Status" class="form-control">
+            <option value="APPROVED">APPROVED</option>
+            <option value="REJECTED">REJECTED</option>
+            <option value="COMPLETED">COMPLETED</option>
+        </select>
+    </div>
+
+    <button type="submit" class="btn-primary">Simpan</button>
+    <a asp-action="Index" class="btn-secondary">Batal</a>
+</form>

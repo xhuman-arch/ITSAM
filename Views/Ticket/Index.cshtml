@@ -1,0 +1,104 @@
+@model ITServiceAssetManagement.Models.PaginatedList<ITServiceAssetManagement.Models.Entities.Ticket>
+@{
+    ViewData["Title"] = "Daftar Tiket";
+}
+
+<h2 class="text-2xl font-semibold mb-4">Daftar Tiket</h2>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert-success">@TempData["Success"]</div>
+}
+
+<div class="flex flex-wrap gap-2 mb-3">
+    <a asp-action="Create" class="btn-primary">+ Buat Tiket</a>
+    @if (User.IsInRole("IT_SERVICE") || User.IsInRole("IT_SUPPORT") || User.IsInRole("PURCHASING"))
+    {
+        <a asp-controller="Export" asp-action="Tickets" class="btn-success">Export Excel</a>
+    }
+</div>
+
+<form method="get" class="flex flex-wrap items-center gap-2 mb-4">
+    <input type="text" name="search" value="@ViewBag.Search" class="form-control w-56" placeholder="Cari judul/deskripsi..." />
+    <select name="status" class="form-control w-44">
+        <option value="">-- Semua Status --</option>
+        <option value="OPEN" selected="@(ViewBag.Status == "OPEN")">OPEN</option>
+        <option value="IN_PROGRESS" selected="@(ViewBag.Status == "IN_PROGRESS")">IN_PROGRESS</option>
+        <option value="RESOLVED" selected="@(ViewBag.Status == "RESOLVED")">RESOLVED</option>
+        <option value="CLOSED" selected="@(ViewBag.Status == "CLOSED")">CLOSED</option>
+    </select>
+    <select name="priority" class="form-control w-40">
+        <option value="">-- Semua Prioritas --</option>
+        <option value="LOW" selected="@(ViewBag.Priority == "LOW")">LOW</option>
+        <option value="MEDIUM" selected="@(ViewBag.Priority == "MEDIUM")">MEDIUM</option>
+        <option value="HIGH" selected="@(ViewBag.Priority == "HIGH")">HIGH</option>
+    </select>
+    <div class="flex items-center">
+        <input type="checkbox" name="overdueOnly" value="true" class="form-check-input" id="overdueOnly" checked="@(ViewBag.OverdueOnly == true)" />
+        <label class="form-check-label" for="overdueOnly">Hanya yang Overdue</label>
+    </div>
+    <button type="submit" class="btn-outline-secondary">Filter</button>
+</form>
+
+<div class="overflow-x-auto">
+    <table class="table-base">
+        <thead>
+            <tr>
+                <th>Judul</th>
+                <th>Requester</th>
+                <th>Asset</th>
+                <th>Prioritas</th>
+                <th>Status</th>
+                <th>Batas Waktu</th>
+                <th>Ditugaskan ke</th>
+                <th>Aksi</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var t in Model)
+            {
+                <tr class="@(t.IsOverdue ? "table-row-danger" : "")">
+                    <td>@t.Title</td>
+                    <td>@t.Requester?.FullName</td>
+                    <td>@t.Asset?.AssetName</td>
+                    <td>@t.Priority</td>
+                    <td><span class="badge-info">@t.Status</span></td>
+                    <td class="whitespace-nowrap">
+                        @t.DueDate?.ToString("dd-MM-yyyy HH:mm")
+                        @if (t.IsOverdue)
+                        {
+                            <span class="badge-danger ml-1">OVERDUE</span>
+                        }
+                    </td>
+                    <td>
+                        @{
+                            var lastAssignment = t.TicketAssignments.OrderByDescending(a => a.AssignedAt).FirstOrDefault();
+                        }
+                        @lastAssignment?.AssignedTo?.FullName
+                    </td>
+                    <td>
+                        <a asp-action="Details" asp-route-id="@t.Id" class="btn-info btn-sm">Detail</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<nav class="mt-4">
+    <ul class="inline-flex -space-x-px">
+        @if (Model.HasPreviousPage)
+        {
+            <li class="page-item">
+                <a class="page-link rounded-l-md" asp-action="Index" asp-route-pageIndex="@(Model.PageIndex - 1)" asp-route-status="@ViewBag.Status" asp-route-priority="@ViewBag.Priority" asp-route-search="@ViewBag.Search" asp-route-overdueOnly="@ViewBag.OverdueOnly">Sebelumnya</a>
+            </li>
+        }
+        <li class="page-item disabled"><span class="page-link">Halaman @Model.PageIndex dari @Model.TotalPages</span></li>
+        @if (Model.HasNextPage)
+        {
+            <li class="page-item">
+                <a class="page-link rounded-r-md" asp-action="Index" asp-route-pageIndex="@(Model.PageIndex + 1)" asp-route-status="@ViewBag.Status" asp-route-priority="@ViewBag.Priority" asp-route-search="@ViewBag.Search" asp-route-overdueOnly="@ViewBag.OverdueOnly">Berikutnya</a>
+            </li>
+        }
+    </ul>
+</nav>

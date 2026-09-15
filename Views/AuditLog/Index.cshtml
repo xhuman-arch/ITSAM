@@ -1,0 +1,59 @@
+@model ITServiceAssetManagement.Models.PaginatedList<ITServiceAssetManagement.Models.Entities.AuditLog>
+@{
+    ViewData["Title"] = "Audit Log";
+}
+
+<h2 class="text-2xl font-semibold mb-4">Audit Log</h2>
+
+<form method="get" class="flex flex-wrap gap-2 mb-4">
+    <select name="entityName" class="form-control w-56" onchange="this.form.submit()">
+        <option value="">-- Semua Entity --</option>
+        <option value="Ticket" selected="@(ViewBag.EntityName == "Ticket")">Ticket</option>
+        <option value="Asset" selected="@(ViewBag.EntityName == "Asset")">Asset</option>
+        <option value="ReplacementRequest" selected="@(ViewBag.EntityName == "ReplacementRequest")">ReplacementRequest</option>
+    </select>
+</form>
+
+<div class="overflow-x-auto">
+    <table class="table-base">
+        <thead>
+            <tr>
+                <th>Waktu</th>
+                <th>Entity</th>
+                <th>Aksi</th>
+                <th>Deskripsi</th>
+                <th>Oleh</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var log in Model)
+            {
+                <tr>
+                    <td>@log.PerformedAt.ToString("dd-MM-yyyy HH:mm")</td>
+                    <td>@log.EntityName #@log.EntityId</td>
+                    <td><span class="badge-secondary">@log.Action</span></td>
+                    <td>@log.Description</td>
+                    <td>@log.PerformedBy?.FullName</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<nav class="mt-4">
+    <ul class="inline-flex -space-x-px">
+        @if (Model.HasPreviousPage)
+        {
+            <li class="page-item">
+                <a class="page-link rounded-l-md" asp-action="Index" asp-route-pageIndex="@(Model.PageIndex - 1)" asp-route-entityName="@ViewBag.EntityName">Sebelumnya</a>
+            </li>
+        }
+        <li class="page-item disabled"><span class="page-link">Halaman @Model.PageIndex dari @Model.TotalPages</span></li>
+        @if (Model.HasNextPage)
+        {
+            <li class="page-item">
+                <a class="page-link rounded-r-md" asp-action="Index" asp-route-pageIndex="@(Model.PageIndex + 1)" asp-route-entityName="@ViewBag.EntityName">Berikutnya</a>
+            </li>
+        }
+    </ul>
+</nav>

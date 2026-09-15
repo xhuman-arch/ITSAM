@@ -1,0 +1,41 @@
+@model List<ITServiceAssetManagement.Models.Entities.Notification>
+@{
+    ViewData["Title"] = "Notifikasi";
+}
+
+<h2 class="text-2xl font-semibold mb-4">Notifikasi</h2>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert-success">@TempData["Success"]</div>
+}
+
+<form asp-action="MarkAllAsRead" method="post" class="mb-3">
+    <button type="submit" class="btn-outline-secondary btn-sm">Tandai Semua Sudah Dibaca</button>
+</form>
+
+@if (!Model.Any())
+{
+    <p class="text-muted2">Tidak ada notifikasi.</p>
+}
+
+<div class="rounded-md overflow-hidden">
+    @foreach (var n in Model)
+    {
+        <form asp-action="MarkAsRead" asp-route-id="@n.Id" method="post" class="list-group-item @(n.IsRead ? "" : "list-group-item-warning")">
+            <button type="submit" class="w-full text-left">
+                <div class="flex justify-between items-start px-3 py-2">
+                    <h6 class="font-medium">@n.Title</h6>
+                    <small class="text-muted2 whitespace-nowrap ml-2">@n.CreatedAt.ToString("dd-MM-yyyy HH:mm")</small>
+                </div>
+                <div class="px-3 pb-2">
+                    <p class="text-sm text-body2 mb-1">@n.Message</p>
+                    @if (!n.IsRead)
+                    {
+                        <span class="badge-danger">Baru</span>
+                    }
+                </div>
+            </button>
+        </form>
+    }
+</div>

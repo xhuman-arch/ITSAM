@@ -1,0 +1,41 @@
+@model ITServiceAssetManagement.Models.TroubleshootingCreateViewModel
+@{
+    ViewData["Title"] = "Tambah Troubleshooting";
+    var ticket = (ITServiceAssetManagement.Models.Entities.Ticket)ViewBag.Ticket;
+}
+
+<h2 class="text-2xl font-semibold mb-4">Troubleshooting untuk Tiket: @ticket.Title</h2>
+
+<form asp-action="AddTroubleshooting" method="post" enctype="multipart/form-data" class="max-w-md">
+    <input type="hidden" asp-for="TicketId" />
+    <div asp-validation-summary="All" class="field-error mb-2"></div>
+
+    <div class="mb-3">
+        <label asp-for="ActionTaken" class="form-label"></label>
+        <textarea asp-for="ActionTaken" class="form-control"></textarea>
+        <span asp-validation-for="ActionTaken" class="field-error"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Notes" class="form-label"></label>
+        <textarea asp-for="Notes" class="form-control"></textarea>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Result" class="form-label"></label>
+        <select asp-for="Result" class="form-control">
+            <option value="PENDING">PENDING</option>
+            <option value="SUCCESS">SUCCESS</option>
+            <option value="FAILED">FAILED</option>
+        </select>
+    </div>
+
+    <div class="mb-4">
+        <label asp-for="AttachmentFile" class="form-label"></label>
+        <input asp-for="AttachmentFile" type="file" class="form-control" accept=".jpg,.jpeg,.png,.gif,.webp,.pdf,.doc,.docx" />
+        <small class="text-muted2">Maksimal 5 MB. Format: jpg, png, gif, webp, pdf, doc, docx.</small>
+    </div>
+
+    <button type="submit" class="btn-primary">Simpan</button>
+    <a asp-action="Details" asp-route-id="@Model.TicketId" class="btn-secondary">Batal</a>
+</form>

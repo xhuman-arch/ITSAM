@@ -1,0 +1,36 @@
+@model ITServiceAssetManagement.Models.Entities.Asset
+@{
+    ViewData["Title"] = "Detail Asset";
+}
+
+<h2 class="text-2xl font-semibold mb-4">Detail Asset</h2>
+
+<dl class="grid grid-cols-1 sm:grid-cols-4 gap-y-2 mb-4 max-w-lg">
+    <dt class="sm:col-span-1 font-medium text-muted2">Nama</dt>
+    <dd class="sm:col-span-3">@Model.AssetName</dd>
+
+    <dt class="sm:col-span-1 font-medium text-muted2">Kode</dt>
+    <dd class="sm:col-span-3">@Model.AssetCode</dd>
+
+    <dt class="sm:col-span-1 font-medium text-muted2">Kategori</dt>
+    <dd class="sm:col-span-3">@Model.Category</dd>
+
+    <dt class="sm:col-span-1 font-medium text-muted2">Lokasi</dt>
+    <dd class="sm:col-span-3">@Model.Location</dd>
+
+    <dt class="sm:col-span-1 font-medium text-muted2">Status</dt>
+    <dd class="sm:col-span-3">@Model.Status</dd>
+
+    <dt class="sm:col-span-1 font-medium text-muted2">Tanggal Beli</dt>
+    <dd class="sm:col-span-3">@Model.PurchaseDate?.ToString("dd-MM-yyyy")</dd>
+</dl>
+
+<h4 class="text-lg font-semibold mb-2">Riwayat Tiket Terkait</h4>
+<ul class="list-disc list-inside mb-4 text-body2">
+    @foreach (var t in Model.Tickets)
+    {
+        <li>@t.Title - @t.Status</li>
+    }
+</ul>
+
+<a asp-action="Index" class="btn-secondary">Kembali</a>
